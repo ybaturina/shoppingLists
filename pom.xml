@@ -18,7 +18,7 @@
 
 	<profiles>
 		<profile>
-			<id>shoppingList</id>
+			<id>local</id>
 			<build>
 				<plugins>
 
@@ -28,7 +28,51 @@
 						<version>2.20</version>
 						<configuration>
 							<suiteXmlFiles>
-								<suiteXmlFile>shoppingList.xml</suiteXmlFile>
+								<suiteXmlFile>local.xml</suiteXmlFile>
+							</suiteXmlFiles>
+							<forkMode>never</forkMode>
+							<testFailureIgnore>false</testFailureIgnore>
+							<argLine>
+								-javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
+							</argLine>
+						</configuration>
+						<dependencies>
+							<dependency>
+								<groupId>org.aspectj</groupId>
+								<artifactId>aspectjweaver</artifactId>
+								<version>${aspectj.version}</version>
+							</dependency>
+						</dependencies>
+					</plugin>
+				</plugins>
+			</build>
+
+			<reporting>
+				<excludeDefaults>true</excludeDefaults>
+				<plugins>
+					<plugin>
+						<groupId>ru.yandex.qatools.allure</groupId>
+						<artifactId>allure-maven-plugin</artifactId>
+						<version>2.2</version>
+						<configuration>
+							<reportDirectory>allure-report</reportDirectory>
+						</configuration>
+					</plugin>
+				</plugins>
+			</reporting>
+		</profile>
+		<profile>
+			<id>saucelabs</id>
+			<build>
+				<plugins>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>2.20</version>
+						<configuration>
+							<suiteXmlFiles>
+								<suiteXmlFile>saucelabs.xml</suiteXmlFile>
 							</suiteXmlFiles>
 							<forkMode>never</forkMode>
 							<testFailureIgnore>false</testFailureIgnore>

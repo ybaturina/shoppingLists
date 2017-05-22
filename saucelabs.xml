@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Automation Test">
+	<test name="Smoke Testcases">
+		<packages>
+		    <package name="setup.sauce" />
+			<package name="tests">
+			</package>
+		</packages>
+	</test>
+</suite>

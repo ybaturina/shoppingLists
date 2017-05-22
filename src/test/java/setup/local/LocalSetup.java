@@ -1,9 +1,7 @@
-package appium;
+package setup.local;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.AfterSuite;
@@ -17,21 +15,24 @@ import io.appium.java_client.remote.MobilePlatform;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
+import setup.AndroidDriverSetup;
 import utils.ScreenshotUtility;
 
+/**
+ * Android driver setup setup for the execution on the local machine.
+ * 
+ * @author ybaturina
+ *
+ */
 @Listeners({ ScreenshotUtility.class })
-public class AppiumServer {
+public class LocalSetup extends AndroidDriverSetup{
 
-	public static AndroidDriver<AndroidElement> driver;
-	private AppiumDriverLocalService driverLocalService = AppiumDriverLocalService
-			.buildService(new AppiumServiceBuilder()
-					.withAppiumJS(new File(System.getenv("NODE_MODULES_HOME") + "/appium/build/lib/main.js"))
-					.usingDriverExecutable(new File(System.getenv("NODE_HOME"))).usingPort(4723)
-					.withArgument(GeneralServerFlag.SESSION_OVERRIDE).withArgument(GeneralServerFlag.LOG_LEVEL, "debug")
-					.withCapabilities(getCapabilities()));
-	private static DesiredCapabilities caps;
+	private AppiumDriverLocalService driverLocalService;
+	private final static String LOCAL_URL_PATH = "http://127.0.0.1:4723/wd/hub";
 
-	public static DesiredCapabilities getCapabilities() {
+	
+	@Override
+	public DesiredCapabilities getCapabilities() {
 		if (caps == null) {
 			File appDir = new File("src");
 			File app = new File(appDir, "Shopping list-1.6.apk");
@@ -48,7 +49,14 @@ public class AppiumServer {
 
 	@BeforeSuite
 	public void start() throws IOException, InterruptedException {
+		driverLocalService = AppiumDriverLocalService
+				.buildService(new AppiumServiceBuilder()
+						.withAppiumJS(new File(System.getenv("NODE_MODULES_HOME") + "/appium/build/lib/main.js"))
+						.usingDriverExecutable(new File(System.getenv("NODE_HOME"))).usingPort(4723)
+						.withArgument(GeneralServerFlag.SESSION_OVERRIDE).withArgument(GeneralServerFlag.LOG_LEVEL, "debug")
+						.withCapabilities(getCapabilities()));
 		driverLocalService.start();
+		getDriver();
 	}
 
 	@AfterSuite
@@ -56,15 +64,8 @@ public class AppiumServer {
 		driverLocalService.stop();
 	}
 
-	public static AndroidDriver<AndroidElement> getDriver() {
-		if (driver == null) {
-			try {
-				driver = new AndroidDriver<AndroidElement>(new URL("http://127.0.0.1:4723/wd/hub"), getCapabilities());
-			} catch (MalformedURLException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		return driver;
+	public AndroidDriver<AndroidElement> getDriver() {
+		return getDriver(LOCAL_URL_PATH);
 	}
 
 }

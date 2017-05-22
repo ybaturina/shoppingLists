@@ -12,7 +12,7 @@ import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
-import appium.AppiumServer;
+import setup.AndroidDriverSetup;
 
 /**
  * Utilities for catching screenshots on test failures.
@@ -62,7 +62,7 @@ public class ScreenshotUtility implements ITestListener {
 		String failMethod = result.getMethod().getRealClass().getSimpleName() + "."
 				+ result.getMethod().getMethodName();
 		// To capture screenshot.
-		File scrFile = ((TakesScreenshot) AppiumServer.driver).getScreenshotAs(OutputType.FILE);
+		File scrFile = ((TakesScreenshot) AndroidDriverSetup.driver).getScreenshotAs(OutputType.FILE);
 		// To create folder to store screenshots
 		File screenshotsDir = new File(SCREENSHOTS);
 		if (!screenshotsDir.exists()) {
