@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestNGSpringIntegration Suite" parallel="false">
+	<test name="TestNGSpringIntegrationTest">
+		<packages>
+			<package name="com.griddynamics.shoppinglists.tests">
+			</package>
+		</packages>
+	</test>
+</suite>

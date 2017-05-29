@@ -1,4 +1,4 @@
-package utils;
+package com.griddynamics.shoppinglists.utils;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;

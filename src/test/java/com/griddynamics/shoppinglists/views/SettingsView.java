@@ -1,12 +1,12 @@
-package views;
+package com.griddynamics.shoppinglists.views;
+
+import static com.griddynamics.shoppinglists.utils.AndroidDriverUtils.selectInDropdown;
+import static com.griddynamics.shoppinglists.utils.AndroidDriverUtils.waitForElement;
 
 import org.openqa.selenium.By;
 
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
-
-import static utils.AndroidDriverUtils.waitForElement;
-import static utils.AndroidDriverUtils.selectInDropdown;
 
 public class SettingsView {
 

@@ -1,44 +1,49 @@
-package tests;
+package com.griddynamics.shoppinglists.steps;
 
 import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
+
+import com.griddynamics.shoppinglists.setup.WebDriverProvider;
+import com.griddynamics.shoppinglists.views.SettingsView;
+import com.griddynamics.shoppinglists.views.ShoppingListView;
+import com.griddynamics.shoppinglists.views.ShoppingListsView;
 
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
-import setup.AndroidDriverSetup;
-import views.SettingsView;
-import views.ShoppingListView;
-import views.ShoppingListsView;
 
 /**
- * Abstract class with common steps and test verification.
+ * Class with common steps and test verification.
  * 
  * @author ybaturina
  *
  */
-public abstract class AbstractShoppingListsSteps {
-
+public class ShoppingListsSteps{
+	
+	private WebDriverProvider driverProvider;
 	private ShoppingListsView listsPage;
 	private ShoppingListView listPage;
 	private SettingsView settingsPage;
-
-	protected ShoppingListsView getLists() {
+	
+	public ShoppingListsSteps(WebDriverProvider driverProvider){
+		this.driverProvider = driverProvider;
+	}
+	
+	public ShoppingListsView getLists() {
 		if (listsPage == null) {
 			listsPage = new ShoppingListsView(getDriver());
 		}
 		return listsPage;
 	}
 
-	protected ShoppingListView getList() {
+	public ShoppingListView getList() {
 		if (listPage == null) {
 			listPage = new ShoppingListView(getDriver());
 		}
 		return listPage;
 	}
 
-	protected SettingsView getSettings() {
+	public SettingsView getSettings() {
 		if (settingsPage == null) {
 			settingsPage = new SettingsView(getDriver());
 		}
@@ -46,15 +51,7 @@ public abstract class AbstractShoppingListsSteps {
 	}
 
 	protected AndroidDriver<AndroidElement> getDriver() {
-		return AndroidDriverSetup.driver;
-	}
-
-	@BeforeMethod
-	public void reset() {
-		navigateToListsView();
-		getLists().removeAllLists();
-		getList().goToMySettingsFromMenu();
-		getSettings().applyDefaultSortAndCurrency();
+		return driverProvider.getDriver();
 	}
 
 	public void hideKeyboard() {
@@ -74,12 +71,12 @@ public abstract class AbstractShoppingListsSteps {
 		}
 	}
 
-	protected void addList(String listName) {
+	public void addList(String listName) {
 		getLists().listName().sendKeys(listName);
 		getLists().addList().click();
 	}
 
-	protected void verifyListDetails(int index, String name, String comment) {
+	public void verifyListDetails(int index, String name, String comment) {
 		Assert.assertEquals(getLists().getListName(index), name, "Wrong list name");
 		Assert.assertTrue(getLists().getListComment(index).startsWith(comment),
 				String.format("Wrong list comment: expected %s, found %s", comment, getLists().getListComment(index)));
@@ -90,7 +87,7 @@ public abstract class AbstractShoppingListsSteps {
 		touchAction.longPress(field).perform();
 	}
 
-	protected void addProductWithPriceAmountComment(String name, String price, String amount, String comment) {
+	public void addProductWithPriceAmountComment(String name, String price, String amount, String comment) {
 		getList().product().sendKeys(name);
 		getList().price().sendKeys(price);
 		getList().amount().sendKeys(amount);
@@ -98,7 +95,7 @@ public abstract class AbstractShoppingListsSteps {
 		getList().addProduct().click();
 	}
 
-	protected void updateProductWithPriceAmountComment(String name, String price, String amount, String comment) {
+	public void updateProductWithPriceAmountComment(String name, String price, String amount, String comment) {
 		updateProductOnEditScreen(name, price, amount, comment);
 		getList().addProduct().click();
 	}
@@ -114,7 +111,7 @@ public abstract class AbstractShoppingListsSteps {
 		getList().comment().sendKeys(comment);
 	}
 
-	protected void updateProductWithPriceAmountCommentUnitCategory(String name, String price, String amount,
+	public void updateProductWithPriceAmountCommentUnitCategory(String name, String price, String amount,
 			String comment, String unit, String category) {
 		updateProductOnEditScreen(name, price, amount, comment);
 		getList().category().click();
@@ -124,7 +121,7 @@ public abstract class AbstractShoppingListsSteps {
 		getList().addProduct().click();
 	}
 
-	protected void verifyProductDetails(int index, String name, String price, String amount, String comment) {
+	public void verifyProductDetails(int index, String name, String price, String amount, String comment) {
 		Assert.assertEquals(getList().getProductName(index), name, "Wrong product name");
 		Assert.assertEquals(getList().getProductComment(index), comment, "Wrong product comment");
 		Assert.assertEquals(getList().getProductAmount(index), String.format("%s pcs.", amount),
@@ -132,14 +129,14 @@ public abstract class AbstractShoppingListsSteps {
 		Assert.assertEquals(getList().getProductPrice(index), String.format("%s £", price), "Wrong product price");
 	}
 
-	protected void verifyProductDetailsOnEditScreen(String name, String price, String amount, String comment) {
+	public void verifyProductDetailsOnEditScreen(String name, String price, String amount, String comment) {
 		Assert.assertEquals(getList().product().getText(), name, "Wrong product name");
 		Assert.assertEquals(getList().comment().getText(), comment, "Wrong product comment");
 		Assert.assertEquals(getList().amount().getText(), amount, "Wrong product amount");
 		Assert.assertEquals(getList().price().getText(), price, "Wrong product price");
 	}
 
-	protected void addProductWithPriceAmountCommentUnitCategory(String name, String price, String amount,
+	public void addProductWithPriceAmountCommentUnitCategory(String name, String price, String amount,
 			String comment, String unit, String category) {
 		getList().product().sendKeys(name);
 		getList().price().sendKeys(price);
@@ -152,7 +149,7 @@ public abstract class AbstractShoppingListsSteps {
 		getList().addProduct().click();
 	}
 
-	protected void verifyProductDetails(int index, String name, String price, String amount, String comment,
+	public void verifyProductDetails(int index, String name, String price, String amount, String comment,
 			String unit, String currency) {
 		Assert.assertEquals(getList().getProductName(index), name, "Wrong product name");
 		Assert.assertEquals(getList().getProductComment(index), comment, "Wrong product comment");
@@ -162,7 +159,7 @@ public abstract class AbstractShoppingListsSteps {
 				"Wrong product price");
 	}
 
-	protected void verifyProductDetailsOnEditScreen(String name, String price, String amount, String comment,
+	public void verifyProductDetailsOnEditScreen(String name, String price, String amount, String comment,
 			String unit, String category) {
 		Assert.assertEquals(getList().product().getText(), name, "Wrong product name");
 		Assert.assertEquals(getList().comment().getText(), comment, "Wrong product comment");
@@ -172,15 +169,15 @@ public abstract class AbstractShoppingListsSteps {
 		Assert.assertEquals(getList().getSelectedCategoryValue(), category, "Wrong product category");
 	}
 
-	protected void verifyListsCount(int count) {
+	public void verifyListsCount(int count) {
 		Assert.assertEquals(getLists().getListsSize(), count, "Wrong lists count:");
 	}
 
-	protected void verifyProductsCount(int count) {
+	public void verifyProductsCount(int count) {
 		Assert.assertEquals(getList().getProductsSize(), count, "Wrong products count:");
 	}
 
-	protected void verifyProductsTotal(double total, String unit) {
+	public void verifyProductsTotal(double total, String unit) {
 		String expectedTotal = String.format("Total: %s %s", total, unit);
 		Assert.assertEquals(getList().total().getText(), expectedTotal, "Wrong products total:");
 	}

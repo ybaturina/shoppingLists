@@ -1,5 +1,6 @@
-package setup;
+package com.griddynamics.shoppinglists.setup;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -14,9 +15,9 @@ import io.appium.java_client.android.AndroidElement;
  * @author ybaturina
  *
  */
-public abstract class AndroidDriverSetup {
+public abstract class WebDriverProvider {
 	
-	public static AndroidDriver<AndroidElement> driver;
+    protected AndroidDriver<AndroidElement> driver;
 	protected DesiredCapabilities caps;
 
 	protected AndroidDriver<AndroidElement> getDriver(String urlPath) {
@@ -31,5 +32,11 @@ public abstract class AndroidDriverSetup {
 	}
 	
 	public abstract DesiredCapabilities getCapabilities();
+	
+	public abstract AndroidDriver<AndroidElement> getDriver();
+	
+	public abstract void start() throws IOException, InterruptedException;
+	
+	public abstract void stop();
 
 }

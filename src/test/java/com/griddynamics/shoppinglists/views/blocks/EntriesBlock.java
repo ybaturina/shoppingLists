@@ -1,4 +1,4 @@
-package views.blocks;
+package com.griddynamics.shoppinglists.views.blocks;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.PageFactory;
